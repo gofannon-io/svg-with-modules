@@ -1,0 +1,70 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+javafx {
+    version = "17"
+    modules = ['javafx.controls']
+}
+
+group = 'io.gofannon.swm'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("de.codecentric.centerdevice:javafxsvg:1.2.1") {
+        exclude(group: "xml-apis", module: "xml-apis")
+        exclude(group: "xml-apis", module: "xml-apis-ext")
+        exclude(group: "org.apache.xmlgraphics", module: "batik-ext")
+        exclude(group: "org.apache.xmlgraphics", module: "batik-script")
+        exclude(group: "xalan", module: "xalan")
+    }
+//    implementation("org.axsl.org.w3c.dom.svg:svg-dom-java:1.1")
+    implementation("org.apache.xmlgraphics:batik-dom:1.16") {
+        exclude(group: "xml-apis", module: "xml-apis")
+        exclude(group: "xml-apis", module: "xml-apis-ext")
+    }
+    implementation("org.apache.xmlgraphics:batik-svg-dom:1.16") {
+        exclude(group: "xml-apis", module: "xml-apis")
+        exclude(group: "xml-apis", module: "xml-apis-ext")
+    }
+
+    implementation("org.apache.xmlgraphics:batik-util:1.16") {
+        exclude(group: "xml-apis", module: "xml-apis")
+        exclude(group: "xml-apis", module: "xml-apis-ext")
+    }
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClass = 'io.gofannon.swm.HelloFX'
+    mainModule = 'swmfx'
+
+    applicationDefaultJvmArgs = [
+            '--add-exports', 'javafx.graphics/com.sun.javafx.iio=javafxsvg',
+            '--add-exports', 'javafx.graphics/com.sun.javafx.iio.common=javafxsvg',
+    ]
+}
+
+jar {
+    manifest {
+        attributes(
+                "Add-Exports": "javafx.graphics/com.sun.javafx.iio javafx.graphics/com.sun.javafx.iio.common"
+        )
+    }
+}
+
+compileJava {
+    options.compilerArgs.addAll('--add-exports', 'javafx.graphics/com.sun.javafx.iio=javafxsvg',
+            '--add-exports', 'javafx.graphics/com.sun.javafx.iio.common=javafxsvg')
+}
