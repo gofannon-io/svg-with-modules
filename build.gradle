@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'extra-java-module-info'
 }
 
 javafx {
@@ -14,6 +15,7 @@ version = '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+ext.batikVersion="1.8"
 
 dependencies {
     implementation("de.codecentric.centerdevice:javafxsvg:1.2.1") {
@@ -24,19 +26,25 @@ dependencies {
         exclude(group: "xalan", module: "xalan")
     }
 //    implementation("org.axsl.org.w3c.dom.svg:svg-dom-java:1.1")
-    implementation("org.apache.xmlgraphics:batik-dom:1.16") {
+    implementation("org.apache.xmlgraphics:batik-dom:${batikVersion}") {
         exclude(group: "xml-apis", module: "xml-apis")
         exclude(group: "xml-apis", module: "xml-apis-ext")
+        exclude(group: "org.apache.xmlgraphics", module: "batik-ext")
     }
-    implementation("org.apache.xmlgraphics:batik-svg-dom:1.16") {
+    implementation("org.apache.xmlgraphics:batik-svg-dom:${batikVersion}") {
         exclude(group: "xml-apis", module: "xml-apis")
         exclude(group: "xml-apis", module: "xml-apis-ext")
+        exclude(group: "org.apache.xmlgraphics", module: "batik-ext")
     }
 
-    implementation("org.apache.xmlgraphics:batik-util:1.16") {
+    implementation("org.apache.xmlgraphics:batik-util:${batikVersion}") {
         exclude(group: "xml-apis", module: "xml-apis")
         exclude(group: "xml-apis", module: "xml-apis-ext")
+        exclude(group: "org.apache.xmlgraphics", module: "batik-ext")
     }
+
+    implementation("bsf:bsf:2.4.0")
+    //implementation 'org.apache.bsf:bsf-api:3.1'
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -67,4 +75,28 @@ jar {
 compileJava {
     options.compilerArgs.addAll('--add-exports', 'javafx.graphics/com.sun.javafx.iio=javafxsvg',
             '--add-exports', 'javafx.graphics/com.sun.javafx.iio.common=javafxsvg')
+}
+
+extraJavaModuleInfo {
+    automaticModule( "javafxsvg-1.2.1.jar", "javafxsvg")
+    automaticModule( "commons-io-1.3.1.jar", "commons.io")
+    automaticModule( "commons-logging-1.0.4.jar", "commons.logging")
+    automaticModule( "xmlgraphics-commons-2.1.jar", "xmlgraphics.commons")
+    automaticModule( "xalan-2.7.0.jar", "xalan")
+    automaticModule( "bsf-2.4.0.jar", "bsf")
+    automaticModule( "batik-anim-1.8.jar", "batik.anim")
+    automaticModule( "batik-bridge-1.8.jar", "batik.bridge")
+    automaticModule( "batik-transcoder-1.8.jar", "batik.transcoder")
+    automaticModule( "batik-svg-dom-1.8.jar", "batik.svg.dom")
+    automaticModule( "batik-dom-1.8.jar", "batik.dom")
+    automaticModule( "batik-css-1.8.jar", "batik.css")
+    automaticModule( "batik-parser-1.8.jar", "batik.parser")
+    automaticModule( "batik-gvt-1.8.jar", "batik.gvt")
+    automaticModule( "batik-util-1.8.jar", "batik.util")
+    automaticModule( "batik-xml-1.8.jar", "batik.xml")
+    automaticModule( "batik-svggen-1.8.jar", "batik.svggen")
+    automaticModule( "batik-awt-util-1.8.jar", "batik.awt.util")
+//    module('thelib-1.1.jar', 'the.lib.mod', '1.1') {
+//        exports('io.gofannon.ums.thelib')
+//    }
 }
